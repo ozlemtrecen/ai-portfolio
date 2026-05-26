@@ -1,933 +1,1174 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="analysis_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="analysis_files/libs/bootstrap/bootstrap-973236bd072d72a04ee9cd82dcc9cb29.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
-  <title>Generative AI for Work & Research | Portfolio</title>
 
-  <style>
-    :root {
-      --burgundy: #7a1f32;
-      --burgundy-dark: #531626;
-      --navy: #102a43;
-      --blue: #2f6f9f;
-      --blue-soft: #eaf3fb;
-      --white: #ffffff;
-      --paper: #f8fafc;
-      --ink: #172033;
-      --muted: #5f6f82;
-      --line: rgba(16, 42, 67, 0.14);
-      --shadow: 0 24px 70px rgba(16, 42, 67, 0.16);
-      --radius: 24px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 8% 8%, rgba(122, 31, 50, 0.16), transparent 30rem),
-        radial-gradient(circle at 92% 4%, rgba(47, 111, 159, 0.18), transparent 32rem),
-        linear-gradient(135deg, #ffffff 0%, #f4f8fb 48%, #eef4fa 100%);
-      min-height: 100vh;
-      line-height: 1.65;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(16, 42, 67, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(16, 42, 67, 0.035) 1px, transparent 1px);
-      background-size: 44px 44px;
-      z-index: -1;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .shell {
-      width: min(1120px, calc(100% - 36px));
-      margin: 0 auto;
-    }
-
-    header {
-      position: sticky;
-      top: 14px;
-      z-index: 10;
-      width: min(1120px, calc(100% - 36px));
-      margin: 14px auto 0;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 14px 36px rgba(16, 42, 67, 0.08);
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.85rem 1rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 800;
-      color: var(--navy);
-      letter-spacing: -0.02em;
-    }
-
-    .mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      color: white;
-      background: linear-gradient(135deg, var(--burgundy), var(--navy));
-      box-shadow: 0 14px 26px rgba(122, 31, 50, 0.22);
-    }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.25rem;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    .links a {
-      padding: 0.55rem 0.78rem;
-      border-radius: 999px;
-      color: #34465a;
-      font-size: 0.9rem;
-      transition: 0.2s ease;
-    }
-
-    .links a:hover {
-      background: var(--blue-soft);
-      color: var(--burgundy);
-    }
-
-    main {
-      padding-bottom: 4rem;
-    }
-
-    .hero {
-      min-height: calc(100vh - 86px);
-      display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 2.2rem;
-      align-items: center;
-      padding: 4rem 0 2rem;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid var(--line);
-      color: var(--burgundy);
-      font: 800 0.82rem Inter, system-ui, sans-serif;
-      letter-spacing: 0.02em;
-      box-shadow: 0 12px 28px rgba(16, 42, 67, 0.06);
-    }
-
-    h1 {
-      margin: 1.25rem 0 1.1rem;
-      font-size: clamp(2.9rem, 6vw, 6.1rem);
-      line-height: 0.94;
-      letter-spacing: -0.065em;
-      color: var(--navy);
-    }
-
-    .accent {
-      color: var(--burgundy);
-    }
-
-    .hero p {
-      max-width: 62ch;
-      color: #4b5d70;
-      font-size: clamp(1.02rem, 1.6vw, 1.18rem);
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.85rem;
-      margin-top: 1.6rem;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0.82rem 1.1rem;
-      border-radius: 999px;
-      font-weight: 800;
-      transition: 0.2s ease;
-    }
-
-    .button.primary {
-      color: white;
-      background: linear-gradient(135deg, var(--burgundy), var(--navy));
-      box-shadow: 0 18px 36px rgba(122, 31, 50, 0.25);
-    }
-
-    .button.secondary {
-      color: var(--navy);
-      background: white;
-      border: 1px solid var(--line);
-    }
-
-    .button:hover {
-      transform: translateY(-2px);
-    }
-
-    .profile-card {
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      box-shadow: var(--shadow);
-      padding: 1rem;
-    }
-
-    .profile-inner {
-      border-radius: 27px;
-      overflow: hidden;
-      background: linear-gradient(180deg, white, #f7fbff);
-      border: 1px solid rgba(16, 42, 67, 0.08);
-    }
-
-    .portrait {
-      height: 330px;
-      border-bottom: 1px solid rgba(16, 42, 67, 0.08);
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(16, 42, 67, 0.03), rgba(122, 31, 50, 0.08));
-    }
-
-    .portrait img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-      filter: saturate(0.92) contrast(1.02);
-    }
-
-    .profile-text {
-      padding: 1.25rem;
-    }
-
-    .profile-text h2 {
-      color: var(--navy);
-      font-size: 1.55rem;
-      line-height: 1.12;
-      margin-bottom: 0.55rem;
-      letter-spacing: -0.03em;
-    }
-
-    .profile-text p {
-      color: var(--muted);
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.7rem;
-      margin-top: 1rem;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    .metric {
-      padding: 0.9rem;
-      border: 1px solid var(--line);
-      background: white;
-      border-radius: 18px;
-    }
-
-    .metric strong {
-      display: block;
-      color: var(--burgundy);
-      font-size: 1.2rem;
-    }
-
-    .metric span {
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    section {
-      margin-top: 2.2rem;
-    }
-
-    .section-card {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: clamp(1.3rem, 3vw, 2.2rem);
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: end;
-      margin-bottom: 1.35rem;
-    }
-
-    .kicker {
-      font: 900 0.74rem Inter, system-ui, sans-serif;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--burgundy);
-      margin-bottom: 0.35rem;
-    }
-
-    .section-head h2 {
-      font-size: clamp(1.9rem, 4vw, 3.1rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      color: var(--navy);
-    }
-
-    .pill {
-      display: inline-flex;
-      padding: 0.45rem 0.75rem;
-      border-radius: 999px;
-      font: 800 0.8rem Inter, system-ui, sans-serif;
-      background: var(--blue-soft);
-      color: var(--blue);
-      white-space: nowrap;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1rem;
-    }
-
-    .copy {
-      color: #4b5d70;
-      font-size: 1.02rem;
-    }
-
-    .copy p + p {
-      margin-top: 0.9rem;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      margin-top: 1rem;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    .chip {
-      padding: 0.5rem 0.72rem;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid var(--line);
-      color: var(--navy);
-      font-weight: 750;
-      font-size: 0.86rem;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 0.72rem;
-    }
-
-    .time-item {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.75rem;
-      padding: 0.9rem;
-      border-radius: 18px;
-      background: #fbfdff;
-      border: 1px solid var(--line);
-    }
-
-    .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      margin-top: 0.45rem;
-      background: var(--burgundy);
-      box-shadow: 0 0 0 6px rgba(122, 31, 50, 0.1);
-    }
-
-    .time-item strong {
-      display: block;
-      color: var(--navy);
-      line-height: 1.2;
-    }
-
-    .time-item span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .course-grid,
-    .submissions-grid {
-      display: grid;
-      gap: 0.9rem;
-    }
-
-    .course-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .submissions-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .course-feature,
-    .submission {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 21px;
-      padding: 1rem;
-      transition: 0.2s ease;
-    }
-
-    .course-feature:hover,
-    .submission:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 34px rgba(16, 42, 67, 0.1);
-    }
-
-    .icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--burgundy), var(--blue));
-      color: white;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      margin-bottom: 0.8rem;
-    }
-
-    .course-feature h3,
-    .submission h3 {
-      color: var(--navy);
-      line-height: 1.15;
-      margin-bottom: 0.45rem;
-      letter-spacing: -0.025em;
-    }
-
-    .course-feature p,
-    .submission p {
-      color: var(--muted);
-      font-size: 0.93rem;
-    }
-
-    .week {
-      display: inline-flex;
-      padding: 0.32rem 0.6rem;
-      border-radius: 999px;
-      color: white;
-      background: var(--burgundy);
-      font: 850 0.78rem Inter, system-ui, sans-serif;
-      margin-bottom: 0.8rem;
-    }
-
-    .project-link {
-      margin-top: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      color: var(--blue);
-      font: 850 0.9rem Inter, system-ui, sans-serif;
-      opacity: 0.95;
-      transition: 0.2s ease;
-    }
-
-    .project-link:hover {
-      color: var(--burgundy);
-      transform: translateX(2px);
-    }
-
-    .placeholder-link {
-      margin-top: 0.95rem;
-      display: inline-flex;
-      color: var(--blue);
-      font: 850 0.9rem Inter, system-ui, sans-serif;
-      opacity: 0.65;
-    }
-
-    .capstone {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1.2rem;
-      align-items: center;
-      color: white;
-      background: linear-gradient(135deg, var(--burgundy-dark), var(--navy) 58%, var(--blue));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: clamp(1.4rem, 4vw, 2.4rem);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .capstone h2 {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      margin-bottom: 0.65rem;
-    }
-
-    .capstone p {
-      color: rgba(255, 255, 255, 0.84);
-      max-width: 72ch;
-    }
-
-    .seal {
-      width: 128px;
-      height: 128px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.32);
-      background: rgba(255, 255, 255, 0.12);
-      font: 900 2.6rem Inter, system-ui, sans-serif;
-    }
-
-    footer {
-      padding: 2rem 0 3rem;
-      color: var(--muted);
-      text-align: center;
-      font: 0.92rem Inter, system-ui, sans-serif;
-    }
-
-    @media (max-width: 920px) {
-      header {
-        position: static;
-        border-radius: 24px;
-      }
-
-      nav,
-      .section-head {
-        align-items: flex-start;
-      }
-
-      nav {
-        flex-direction: column;
-      }
-
-      .links {
-        justify-content: flex-start;
-      }
-
-      .hero,
-      .about-grid,
-      .capstone {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        min-height: auto;
-        padding-top: 2.2rem;
-      }
-
-      .course-grid,
-      .submissions-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 620px) {
-      .shell,
-      header {
-        width: min(100% - 24px, 1120px);
-      }
-
-      .course-grid,
-      .submissions-grid,
-      .metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        flex-direction: column;
-      }
-
-      .portrait {
-        height: 260px;
-      }
-
-      .seal {
-        width: 96px;
-        height: 96px;
-      }
-    }
-  </style>
 </head>
 
-<body>
-  <header>
-    <nav>
-      <a href="#top" class="brand" aria-label="Portfolio home">
-        <span class="mark">AI</span>
-        <span>Research Portfolio</span>
-      </a>
+<body class="fullcontent">
 
-      <div class="links" aria-label="Page navigation">
-        <a href="#about">About me</a>
-        <a href="#course">Course</a>
-        <a href="#submissions">Weekly submissions</a>
-        <a href="#capstone">Capstone</a>
-      </div>
-    </nav>
-  </header>
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-  <main id="top" class="shell">
-    <section class="hero" aria-label="Hero section">
-      <div>
-        <span class="eyebrow">Portfolio for Generative AI for Work & Research</span>
+<main class="content" id="quarto-document-content">
 
-        <h1>
-          Responsible AI for <span class="accent">research, communication</span> and clinical science.
-        </h1>
 
-        <p>
-          A one-page learning portfolio documenting my progress through the Generative AI for Work & Research course.
-          The focus is on practical, ethical, and verifiable AI use for literature work, data analysis, scientific writing,
-          visual communication, and professional productivity.
-        </p>
 
-        <div class="cta-row">
-          <a class="button primary" href="#submissions">View weekly work</a>
-          <a class="button secondary" href="#about">About this portfolio</a>
-        </div>
-      </div>
 
-      <aside class="profile-card" aria-label="Profile card">
-        <div class="profile-inner">
-          <div class="portrait">
-            <img
-              src="https://github.com/ozlemtrecen/ai-portfolio/blob/main/O%CC%88zlem%20TU%CC%88RKMEN%20RECEN.jpeg?raw=true"
-              alt="Professional portrait of Özlem Türkmen Recen"
-            />
-          </div>
+<section id="hepatitis-b-hepb3-and-hib3-vaccination-coverage-in-2020" class="level1">
+<h1>Hepatitis B (HepB3) and Hib3 Vaccination Coverage in 2020</h1>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This report compares national <strong>Hepatitis B third-dose (HepB3)</strong> and <strong>Haemophilus influenzae type b third-dose (Hib3)</strong> vaccination coverage in <strong>2020</strong>, using country-level estimates from the provided datasets.</p>
+</section>
+<section id="data-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-overview">Data overview</h2>
+<p>A sample of each source file:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">geo</th>
+<th style="text-align: left;">name</th>
+<th style="text-align: right;">1991</th>
+<th style="text-align: right;">1992</th>
+<th style="text-align: right;">1993</th>
+<th style="text-align: right;">1994</th>
+<th style="text-align: right;">1995</th>
+<th style="text-align: right;">1996</th>
+<th style="text-align: right;">1997</th>
+<th style="text-align: right;">1998</th>
+<th style="text-align: right;">1999</th>
+<th style="text-align: right;">2000</th>
+<th style="text-align: right;">2001</th>
+<th style="text-align: right;">2002</th>
+<th style="text-align: right;">2003</th>
+<th style="text-align: right;">2004</th>
+<th style="text-align: right;">2005</th>
+<th style="text-align: right;">2006</th>
+<th style="text-align: right;">2007</th>
+<th style="text-align: right;">2008</th>
+<th style="text-align: right;">2009</th>
+<th style="text-align: right;">2010</th>
+<th style="text-align: right;">2011</th>
+<th style="text-align: right;">2012</th>
+<th style="text-align: right;">2013</th>
+<th style="text-align: right;">2014</th>
+<th style="text-align: right;">2015</th>
+<th style="text-align: right;">2016</th>
+<th style="text-align: right;">2017</th>
+<th style="text-align: right;">2018</th>
+<th style="text-align: right;">2019</th>
+<th style="text-align: right;">2020</th>
+<th style="text-align: right;">2021</th>
+<th style="text-align: right;">2022</th>
+<th style="text-align: right;">2023</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">afg</td>
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ago</td>
+<td style="text-align: left;">Angola</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">alb</td>
+<td style="text-align: left;">Albania</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">and</td>
+<td style="text-align: left;">Andorra</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">are</td>
+<td style="text-align: left;">UAE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">96</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">arg</td>
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">66</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">geo</th>
+<th style="text-align: left;">name</th>
+<th style="text-align: right;">1989</th>
+<th style="text-align: right;">1990</th>
+<th style="text-align: right;">1991</th>
+<th style="text-align: right;">1992</th>
+<th style="text-align: right;">1993</th>
+<th style="text-align: right;">1994</th>
+<th style="text-align: right;">1995</th>
+<th style="text-align: right;">1996</th>
+<th style="text-align: right;">1997</th>
+<th style="text-align: right;">1998</th>
+<th style="text-align: right;">1999</th>
+<th style="text-align: right;">2000</th>
+<th style="text-align: right;">2001</th>
+<th style="text-align: right;">2002</th>
+<th style="text-align: right;">2003</th>
+<th style="text-align: right;">2004</th>
+<th style="text-align: right;">2005</th>
+<th style="text-align: right;">2006</th>
+<th style="text-align: right;">2007</th>
+<th style="text-align: right;">2008</th>
+<th style="text-align: right;">2009</th>
+<th style="text-align: right;">2010</th>
+<th style="text-align: right;">2011</th>
+<th style="text-align: right;">2012</th>
+<th style="text-align: right;">2013</th>
+<th style="text-align: right;">2014</th>
+<th style="text-align: right;">2015</th>
+<th style="text-align: right;">2016</th>
+<th style="text-align: right;">2017</th>
+<th style="text-align: right;">2018</th>
+<th style="text-align: right;">2019</th>
+<th style="text-align: right;">2020</th>
+<th style="text-align: right;">2021</th>
+<th style="text-align: right;">2022</th>
+<th style="text-align: right;">2023</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">afg</td>
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ago</td>
+<td style="text-align: left;">Angola</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">alb</td>
+<td style="text-align: left;">Albania</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">and</td>
+<td style="text-align: left;">Andorra</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">are</td>
+<td style="text-align: left;">UAE</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">96</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">arg</td>
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">66</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="coverage" class="level2">
+<h2 class="anchored" data-anchor-id="coverage">2020 coverage</h2>
+<p>Each indicator is restricted to <strong>2020</strong>; countries without a reported value are excluded from numeric summaries but still appear as missing on the maps.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Indicator</th>
+<th style="text-align: right;">Countries</th>
+<th style="text-align: right;">Median_coverage</th>
+<th style="text-align: right;">Mean_coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">HepB3</td>
+<td style="text-align: right;">161</td>
+<td style="text-align: right;">89.0</td>
+<td style="text-align: right;">84.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hib3</td>
+<td style="text-align: right;">161</td>
+<td style="text-align: right;">89.0</td>
+<td style="text-align: right;">84.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HepB3 (countries with both indicators)</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">89.0</td>
+<td style="text-align: right;">84.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hib3 (countries with both indicators)</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">89.0</td>
+<td style="text-align: right;">84.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Both vaccines — estimated joint coverage</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">79.2</td>
+<td style="text-align: right;">73.4</td>
+</tr>
+</tbody>
+</table>
+<p>Among the 160 countries with 2020 data for <strong>both</strong> indicators, the estimated share of children receiving <strong>both</strong> HepB3 and Hib3 is <strong>73.4%</strong> on average (median <strong>79.2%</strong>). This uses each country’s formula (HepB3% × Hib3% ÷ 100), then averages across countries; it is an unweighted country mean, not a global population total.</p>
+</section>
+<section id="world-maps-2020" class="level2">
+<h2 class="anchored" data-anchor-id="world-maps-2020">World maps (2020)</h2>
+<section id="hepb3-vaccination-coverage" class="level3">
+<h3 class="anchored" data-anchor-id="hepb3-vaccination-coverage">HepB3 vaccination coverage</h3>
+<p><img src="analysis_files/figure-gfm/map-hepb-1.png" class="img-fluid"><!-- --></p>
+</section>
+<section id="hib3-vaccination-coverage" class="level3">
+<h3 class="anchored" data-anchor-id="hib3-vaccination-coverage">Hib3 vaccination coverage</h3>
+<p><img src="analysis_files/figure-gfm/map-hib-1.png" class="img-fluid"><!-- --></p>
+</section>
+</section>
+<section id="relationship-between-hepb3-and-hib3-2020" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-between-hepb3-and-hib3-2020">Relationship between HepB3 and Hib3 (2020)</h2>
+<p><img src="analysis_files/figure-gfm/scatter-1.png" class="img-fluid"><!-- --></p>
+<p>Among 160 countries with both indicators reported in 2020, the Pearson correlation is <strong>0.93</strong>.</p>
+</section>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
+<p>HepB3 and Hib3 coverage in 2020 are <strong>strongly positively associated</strong>: countries with higher HepB3 coverage tend to have higher Hib3 coverage, and the scatterplot points cluster close to the diagonal. The high correlation (0.93) suggests that both indicators largely reflect the same underlying strength of routine immunization systems rather than independent program performance.</p>
+<p>The world maps show similar geographic patterns for both vaccines—high coverage across much of the Americas, Europe, and parts of Asia, and lower coverage in several countries in sub-Saharan Africa and a few other regions. Large gaps on the maps (grey countries) indicate missing 2020 estimates rather than zero coverage.</p>
+<p>Together, the maps and scatterplot indicate that <strong>gains in one third-dose vaccine are typically accompanied by gains in the other</strong>, which is consistent with both being delivered through routine childhood immunization schedules in the same health systems.</p>
+</section>
+</section>
 
-          <div class="profile-text">
-            <h2>
-              Medical microbiology specialist with a focus on public health, vaccines and data-informed research.
-            </h2>
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
 
-            <p>
-              Interested in using AI as a rigorous assistant for scientific workflows, not as a replacement for expert judgement.
-            </p>
 
-            <div class="metrics">
-              <div class="metric">
-                <strong>MD</strong>
-                <span>Clinical microbiology background</span>
-              </div>
 
-              <div class="metric">
-                <strong>AI</strong>
-                <span>Research productivity workflows</span>
-              </div>
 
-              <div class="metric">
-                <strong>Data</strong>
-                <span>R &amp; Python foundations</span>
-              </div>
-
-              <div class="metric">
-                <strong>Comms</strong>
-                <span>Science communication</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section id="about" class="section-card" aria-labelledby="about-title">
-      <div class="section-head">
-        <div>
-          <div class="kicker">About me</div>
-          <h2 id="about-title">Clinical microbiology meets AI-assisted research practice.</h2>
-        </div>
-
-        <span class="pill">Professional profile</span>
-      </div>
-
-      <div class="about-grid">
-        <div class="copy">
-          <p>
-            I am a medical doctor and medical microbiology specialist working across diagnostic microbiology,
-            culture-based methods, antimicrobial susceptibility testing, public health laboratory workflows,
-            and quality-oriented laboratory practice.
-          </p>
-
-          <p>
-            My research interests include vaccines, respiratory virus epidemiology, surveillance, machine learning
-            in diagnostic microbiology, and science communication. I am especially interested in how generative AI
-            can support clearer writing, faster evidence organization, more reproducible analysis, and better
-            communication without compromising scientific integrity.
-          </p>
-
-          <div class="chips">
-            <span class="chip">Medical microbiology</span>
-            <span class="chip">Vaccinology</span>
-            <span class="chip">Machine learning</span>
-            <span class="chip">Public health</span>
-            <span class="chip">Research writing</span>
-            <span class="chip">Visual communication</span>
-          </div>
-        </div>
-
-        <div class="timeline" aria-label="Professional highlights">
-          <div class="time-item">
-            <span class="dot"></span>
-            <div>
-              <strong>Clinical microbiology practice</strong>
-              <span>Diagnostics, culture techniques and antimicrobial susceptibility testing</span>
-            </div>
-          </div>
-
-          <div class="time-item">
-            <span class="dot"></span>
-            <div>
-              <strong>Public health laboratory experience</strong>
-              <span>Surveillance-oriented viral diagnostics and quality systems</span>
-            </div>
-          </div>
-
-          <div class="time-item">
-            <span class="dot"></span>
-            <div>
-              <strong>Scientific society involvement</strong>
-              <span>Early-career leadership, education and vaccine-related collaborations</span>
-            </div>
-          </div>
-
-          <div class="time-item">
-            <span class="dot"></span>
-            <div>
-              <strong>Research and communication</strong>
-              <span>Scientific manuscripts, conference work, data analysis and outreach</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="course" class="section-card" aria-labelledby="course-title">
-      <div class="section-head">
-        <div>
-          <div class="kicker">About the course</div>
-          <h2 id="course-title">Generative AI for Work & Research</h2>
-        </div>
-
-        <span class="pill">8-week learning portfolio</span>
-      </div>
-
-      <div class="copy" style="margin-bottom: 1.2rem; max-width: 82ch;">
-        <p>
-          The course explores practical generative AI skills for professional and research settings, including
-          content creation, document workflows, presentations, no-code websites, automated data analysis,
-          literature review support, knowledge management, custom chatbots, task automation and a final capstone project.
-        </p>
-      </div>
-
-      <div class="course-grid">
-        <article class="course-feature">
-          <div class="icon">01</div>
-          <h3>Writing and documents</h3>
-          <p>
-            Using AI to structure reports, manuscripts, summaries and professional communication while preserving
-            accuracy and authorship.
-          </p>
-        </article>
-
-        <article class="course-feature">
-          <div class="icon">02</div>
-          <h3>Presentations and websites</h3>
-          <p>
-            Designing clear academic outputs, visual explanations and web-based portfolios without frameworks.
-          </p>
-        </article>
-
-        <article class="course-feature">
-          <div class="icon">03</div>
-          <h3>Data analysis support</h3>
-          <p>
-            Exploring AI-assisted cleaning, analysis planning, visualization and reproducibility checks.
-          </p>
-        </article>
-
-        <article class="course-feature">
-          <div class="icon">04</div>
-          <h3>Literature workflows</h3>
-          <p>
-            Supporting search strategy, evidence mapping, synthesis and structured reading notes.
-          </p>
-        </article>
-
-        <article class="course-feature">
-          <div class="icon">05</div>
-          <h3>Custom assistants</h3>
-          <p>
-            Designing domain-specific chatbots for research, education, project management and communication.
-          </p>
-        </article>
-
-        <article class="course-feature">
-          <div class="icon">06</div>
-          <h3>Responsible practice</h3>
-          <p>
-            Keeping outputs transparent, privacy-conscious, verifiable and ready for expert review.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="submissions" class="section-card" aria-labelledby="submissions-title">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Learning archive</div>
-          <h2 id="submissions-title">My weekly submissions</h2>
-        </div>
-
-        <span class="pill">Project links</span>
-      </div>
-
-      <div class="submissions-grid">
-        <article class="submission">
-          <div>
-            <div class="week">Week 1</div>
-            <h3>AI foundations</h3>
-            <p>Reflection, prompt experiments and productivity map.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 2</div>
-            <h3>Workshop 2: Automated Data Analysis</h3>
-            <p>
-              AI-assisted analysis of Gapminder data to explore relationships between two global indicators.
-            </p>
-          </div>
-
-          <a
-            class="project-link"
-            href="analysis.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View report →
-          </a>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 3</div>
-            <h3>Presentation design</h3>
-            <p>Academic slides, visual communication and storytelling.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 4</div>
-            <h3>Data analysis</h3>
-            <p>Cleaning, visualization and reproducibility notes.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 5</div>
-            <h3>Literature review</h3>
-            <p>Evidence organization, search support and synthesis.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 6</div>
-            <h3>Knowledge system</h3>
-            <p>Research dashboard, notes or project organization.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 7</div>
-            <h3>Custom chatbot</h3>
-            <p>Assistant concept, testing plan and limitations.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-
-        <article class="submission">
-          <div>
-            <div class="week">Week 8</div>
-            <h3>Capstone</h3>
-            <p>Final applied AI workflow for real professional use.</p>
-          </div>
-          <span class="placeholder-link">Add link</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="capstone" class="capstone" aria-labelledby="capstone-title">
-      <div>
-        <div class="kicker" style="color: rgba(255,255,255,0.78);">Final project</div>
-        <h2 id="capstone-title">Capstone project</h2>
-        <p>
-          This section will later summarize the final applied workflow developed during the course, with emphasis
-          on responsible use, reproducibility, scientific value and practical relevance.
-        </p>
-      </div>
-
-      <div class="seal" aria-hidden="true">AI</div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="shell">
-      Generative AI for Work &amp; Research portfolio · Built as a lightweight academic portfolio.
-    </div>
-  </footer>
-</body>
-</html>
+</body></html>
