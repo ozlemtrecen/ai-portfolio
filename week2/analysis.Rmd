@@ -1,0 +1,204 @@
+---
+title: "Hepatitis B (HepB3) and Hib3 Vaccination Coverage in 2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 10, fig.height = 5)
+
+local_lib <- file.path(getwd(), "r_libs")
+if (dir.exists(local_lib)) {
+  .libPaths(c(local_lib, .libPaths()))
+}
+
+library(tidyverse)
+library(ggplot2)
+library(maps)
+
+name_map <- c(
+  "UAE" = "United Arab Emirates",
+  "Cote d'Ivoire" = "Ivory Coast",
+  "Congo, Dem. Rep." = "Democratic Republic of the Congo",
+  "Congo, Rep." = "Republic of Congo",
+  "Micronesia, Fed. Sts." = "Micronesia",
+  "Kyrgyz Republic" = "Kyrgyzstan",
+  "St. Kitts and Nevis" = "Saint Kitts",
+  "Lao" = "Laos",
+  "St. Lucia" = "Saint Lucia",
+  "Slovak Republic" = "Slovakia",
+  "Eswatini" = "Swaziland",
+  "St. Vincent and the Grenadines" = "Saint Vincent"
+)
+
+read_vacc <- function(path, indicator_label) {
+  read.csv(path, check.names = FALSE) %>%
+    rename(geo = geo, country = name) %>%
+    pivot_longer(
+      cols = -c(geo, country),
+      names_to = "year",
+      values_to = "coverage"
+    ) %>%
+    mutate(
+      year = as.integer(year),
+      coverage = as.numeric(coverage),
+      indicator = indicator_label
+    )
+}
+
+plot_world_map <- function(data_2020, title, fill_label) {
+  map_join_name <- if_else(
+    data_2020$country %in% names(name_map),
+    name_map[data_2020$country],
+    data_2020$country
+  )
+
+  plot_data <- data_2020 %>%
+    mutate(map_region = map_join_name) %>%
+    right_join(map_data("world"), by = c("map_region" = "region"))
+
+  ggplot(plot_data, aes(x = long, y = lat, group = group, fill = coverage)) +
+    geom_polygon(color = "grey85", linewidth = 0.1) +
+    coord_fixed(ratio = 1.3) +
+    scale_fill_viridis_c(
+      option = "C",
+      na.value = "grey90",
+      limits = c(0, 100),
+      name = fill_label
+    ) +
+    theme_void() +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(face = "bold", hjust = 0.5)
+    ) +
+    labs(title = title, x = NULL, y = NULL)
+}
+```
+
+## Introduction
+
+This report compares national **Hepatitis B third-dose (HepB3)** and **Haemophilus influenzae type b third-dose (Hib3)** vaccination coverage in **2020**, using country-level estimates from the provided datasets.
+
+## Data overview
+
+```{r load-data}
+hepb_raw <- read.csv("hepb3_vacc.csv", check.names = FALSE)
+hib_raw <- read.csv("hib3_vacc.csv", check.names = FALSE)
+
+hepb <- read_vacc("hepb3_vacc.csv", "HepB3")
+hib <- read_vacc("hib3_vacc.csv", "Hib3")
+```
+
+A sample of each source file:
+
+```{r sample-hepb}
+knitr::kable(head(hepb_raw, 6))
+```
+
+```{r sample-hib}
+knitr::kable(head(hib_raw, 6))
+```
+
+## 2020 coverage
+
+Each indicator is restricted to **2020**; countries without a reported value are excluded from numeric summaries but still appear as missing on the maps.
+
+```{r subset-2020}
+hepb_2020 <- hepb %>% filter(year == 2020)
+hib_2020 <- hib %>% filter(year == 2020)
+
+combined_2020 <- hepb_2020 %>%
+  select(geo, country, hepb3 = coverage) %>%
+  inner_join(
+    hib_2020 %>% select(geo, hib3 = coverage),
+    by = "geo"
+  ) %>%
+  filter(!is.na(hepb3), !is.na(hib3)) %>%
+  mutate(
+    # Per-country estimate of receiving both third doses (independence assumption)
+    both_est_pct = (hepb3 / 100) * (hib3 / 100) * 100
+  )
+
+summary_2020 <- tibble(
+  Indicator = c(
+    "HepB3",
+    "Hib3",
+    "HepB3 (countries with both indicators)",
+    "Hib3 (countries with both indicators)",
+    "Both vaccines — estimated joint coverage"
+  ),
+  Countries = c(
+    sum(!is.na(hepb_2020$coverage)),
+    sum(!is.na(hib_2020$coverage)),
+    nrow(combined_2020),
+    nrow(combined_2020),
+    nrow(combined_2020)
+  ),
+  Median_coverage = c(
+    median(hepb_2020$coverage, na.rm = TRUE),
+    median(hib_2020$coverage, na.rm = TRUE),
+    median(combined_2020$hepb3),
+    median(combined_2020$hib3),
+    median(combined_2020$both_est_pct)
+  ),
+  Mean_coverage = c(
+    mean(hepb_2020$coverage, na.rm = TRUE),
+    mean(hib_2020$coverage, na.rm = TRUE),
+    mean(combined_2020$hepb3),
+    mean(combined_2020$hib3),
+    mean(combined_2020$both_est_pct)
+  )
+)
+
+knitr::kable(summary_2020, digits = 1)
+```
+
+Among the `r nrow(combined_2020)` countries with 2020 data for **both** indicators, the estimated share of children receiving **both** HepB3 and Hib3 is **`r sprintf("%.1f", mean(combined_2020$both_est_pct))`%** on average (median **`r sprintf("%.1f", median(combined_2020$both_est_pct))`%**). This uses each country’s formula (HepB3% × Hib3% ÷ 100), then averages across countries; it is an unweighted country mean, not a global population total.
+
+## World maps (2020)
+
+### HepB3 vaccination coverage
+
+```{r map-hepb}
+plot_world_map(
+  hepb_2020 %>% filter(!is.na(coverage)),
+  "HepB3 vaccination coverage by country, 2020",
+  "Coverage (%)"
+)
+```
+
+### Hib3 vaccination coverage
+
+```{r map-hib}
+plot_world_map(
+  hib_2020 %>% filter(!is.na(coverage)),
+  "Hib3 vaccination coverage by country, 2020",
+  "Coverage (%)"
+)
+```
+
+## Relationship between HepB3 and Hib3 (2020)
+
+```{r scatter}
+cor_2020 <- cor(combined_2020$hepb3, combined_2020$hib3)
+
+ggplot(combined_2020, aes(x = hepb3, y = hib3)) +
+  geom_point(alpha = 0.7, color = "#2166AC") +
+  geom_smooth(method = "lm", se = TRUE, color = "#B2182B", fill = "#FDDBC7") +
+  labs(
+    title = "HepB3 vs Hib3 vaccination coverage, 2020",
+    x = "HepB3 coverage (%)",
+    y = "Hib3 coverage (%)"
+  ) +
+  coord_equal(xlim = c(0, 100), ylim = c(0, 100)) +
+  theme_minimal(base_size = 12)
+```
+
+Among `r nrow(combined_2020)` countries with both indicators reported in 2020, the Pearson correlation is **`r round(cor_2020, 2)`**.
+
+## Interpretation
+
+HepB3 and Hib3 coverage in 2020 are **strongly positively associated**: countries with higher HepB3 coverage tend to have higher Hib3 coverage, and the scatterplot points cluster close to the diagonal. The high correlation (`r round(cor_2020, 2)`) suggests that both indicators largely reflect the same underlying strength of routine immunization systems rather than independent program performance.
+
+The world maps show similar geographic patterns for both vaccines—high coverage across much of the Americas, Europe, and parts of Asia, and lower coverage in several countries in sub-Saharan Africa and a few other regions. Large gaps on the maps (grey countries) indicate missing 2020 estimates rather than zero coverage.
+
+Together, the maps and scatterplot indicate that **gains in one third-dose vaccine are typically accompanied by gains in the other**, which is consistent with both being delivered through routine childhood immunization schedules in the same health systems.
