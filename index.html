@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generative AI for Work & Research | Portfolio</title>
+
   <style>
     :root {
       --burgundy: #7a1f32;
@@ -482,6 +483,17 @@
       opacity: 0.65;
     }
 
+    .note {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: var(--blue-soft);
+      border: 1px solid rgba(47, 111, 159, 0.2);
+      color: var(--navy);
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.92rem;
+    }
+
     .capstone {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -633,7 +645,7 @@
           <div class="portrait">
             <img
               src="https://github.com/ozlemtrecen/ai-portfolio/blob/main/O%CC%88zlem%20TU%CC%88RKMEN%20RECEN.jpeg?raw=true"
-              alt="Professional portrait"
+              alt="Professional portrait of Özlem Türkmen Recen"
             />
           </div>
 
@@ -841,9 +853,25 @@
               AI-assisted analysis of Gapminder data to explore relationships between two global indicators.
             </p>
           </div>
+
+          <!--
+            IMPORTANT:
+            This link will work only if your GitHub repository has this exact file path:
+
+            ai-portfolio/week2/analysis.html
+
+            Upload your local file:
+            /Users/ozlemturkmenrecen/Desktop/STUDY/Graph courses - AI work/week2/analysis.html
+
+            into a GitHub folder named:
+            week2
+
+            The final public URL will become:
+            https://ozlemtrecen.github.io/ai-portfolio/week2/analysis.html
+          -->
           <a
             class="project-link"
-            href="https://ozlemtrecen.github.io/ai-portfolio/week2/analysis.html"
+            href="week2/analysis.html"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -905,6 +933,12 @@
           <span class="placeholder-link">Add link</span>
         </article>
       </div>
+
+      <div class="note">
+        <strong>Note:</strong> The Week 2 report link uses a relative path:
+        <code>week2/analysis.html</code>. To avoid a 404 error, upload the file
+        <code>analysis.html</code> into a folder named <code>week2</code> in the same GitHub repository as this portfolio.
+      </div>
     </section>
 
     <section id="capstone" class="capstone" aria-labelledby="capstone-title">
@@ -923,10 +957,8 @@
 
   <footer>
     <div class="shell">
-      Generative AI for Work &amp; Research portfolio · Built as a lightweight academic website with HTML and CSS.
+      Generative AI for Work &amp; Research portfolio · Built as a lightweight academic portfolio.
     </div>
-  </foote
-::contentReference[oaicite:2]{index=2}
-r>
+  </footer>
 </body>
 </html>
